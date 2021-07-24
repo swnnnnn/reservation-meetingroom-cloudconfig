@@ -1,0 +1,75 @@
+server:
+  port: 8500
+
+spring:
+  application:
+    name: reservation-meetingroom-cloudconfig
+  profiles:
+    active: native
+
+application:
+  project-name: reservation-meetingroom-cloudconfig
+
+logging:
+  path:
+    root: /var/log/reservation-meetingroom
+  file: ${logging.path.root}/${application.project-name}/${spring.application.name}.log
+
+developer:
+  git:
+    id: 
+    password: 
+    basedir: 
+
+---
+spring:
+  profiles: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations:
+            - file:${developer.git.local-git-storage}
+            - file:${developer.git.local-git-storage}/services
+
+developer:
+  git:
+    local-git-storage: C:\project\reservation\projects\meetingroom\reservation.meetingroom.config
+
+logging:
+  path:
+    root: C:\project\reservation\logs\meetingroom
+
+---
+spring:
+  profiles: local
+  cloud:
+    config:
+      server:
+        native:
+          search-locations:
+            - file:${developer.git.local-git-storage}
+            - file:${developer.git.local-git-storage}/services
+
+developer:
+  git:
+    local-git-storage: C:\project\reservation\projects\meetingroom\reservation.meetingroom.config
+
+logging:
+  path:
+    root: C:\project\reservation\logs\meetingroom
+
+---
+spring:
+  profiles: prod
+  cloud:
+    config:
+      server:
+        git:
+          uri: 
+          username: 
+          password: ${developer.git.password}
+          basedir: ${developer.git.basedir}
+          search-paths:
+            - services
+          default-label: master
